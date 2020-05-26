@@ -20,3 +20,14 @@ let products: Product[] = [
     price: 59.99,
   },
 ];
+
+// @desc    Get all products
+// @route   GET /api/v0/products
+const getProducts = ({ response }: { response: any }) => {
+  response.body = {
+    success: true,
+    data: products,
+  };
+};
+
+export { getProducts };
