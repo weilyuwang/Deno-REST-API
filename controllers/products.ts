@@ -32,8 +32,23 @@ const getProducts = ({ response }: { response: any }) => {
 
 // @desc    Get single product
 // @route   GET /api/v0/products/:id
-const getProduct = ({ response }: { response: any }) => {
-  response.body = "get";
+const getProduct = (
+  { params, response }: { params: { id: string }; response: any },
+) => {
+  const product: Product | undefined = products.find((p) => p.id === params.id);
+  if (product) {
+    response.status = 200;
+    response.body = {
+      success: true,
+      data: product,
+    };
+  } else {
+    response.status = 404;
+    response.body = {
+      success: false,
+      message: "No Product Found",
+    };
+  }
 };
 
 // @desc    Add product
