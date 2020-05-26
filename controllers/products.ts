@@ -30,4 +30,28 @@ const getProducts = ({ response }: { response: any }) => {
   };
 };
 
-export { getProducts };
+// @desc    Get single product
+// @route   GET /api/v0/products/:id
+const getProduct = ({ response }: { response: any }) => {
+  response.body = "get";
+};
+
+// @desc    Add product
+// @route   POST /api/v0/products
+const addProduct = ({ response }: { response: any }) => {
+  response.body = "add";
+};
+
+// @desc    Update product
+// @route   PUT /api/v0/products/:id
+const updateProduct = ({ response }: { response: any }) => {
+  response.body = "update";
+};
+
+// @desc    Delete product
+// @route   DELETE /api/v0/products/:id
+const deleteProduct = ({ response }: { response: any }) => {
+  response.body = "delete";
+};
+
+export { getProducts, getProduct, addProduct, updateProduct, deleteProduct };
