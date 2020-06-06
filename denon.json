@@ -9,7 +9,7 @@
       "desc": "Run the main server.",
       "allow": ["env", "net"],
       "env": {
-        "PORT": "8000"
+        "PORT": "5000"
       }
     }
   }

@@ -11,4 +11,4 @@ app.use(router.allowedMethods());
 
 console.log(`Server running on port ${port}`);
 
-await app.listen({ port: +port });
+await app.listen({ port: +port }); // turn port string into a number
