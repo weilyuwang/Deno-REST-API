@@ -1,15 +1,17 @@
 # Deno REST API
 
-> This is a simple REST API using Deno and Oak.
-> No Database used for now - data is stored in memory
+> This is a REST API using Deno, Oak and PostgreSQL
 
-## Run
+### Run (with Denon Dev Tool)
+
+- Make sure you have PostgreSQL server installed & started
+- Edit the "config.ts" file with your own PostgreSQL credentials
 
 ```
-deno run --allow-net server.ts
+denon start
 ```
 
-## Routes
+### Routes
 
 ```
 GET      /api/v1/products
