@@ -1,5 +1,4 @@
 import Product from "../types.ts";
-import { v4 } from "https://deno.land/std/uuid/mod.ts";
 import { Client } from "https://deno.land/x/postgres/mod.ts";
 import { dbCreds } from "../config.ts";
 
@@ -163,34 +162,43 @@ const updateProduct = async ({
     request: any;
     response: any;
 }) => {
-    const product: Product | undefined = products.find(
-        (p) => p.id === params.id
-    );
-    if (product) {
-        // parse request body
-        const body = await request.body();
-        const updateData: {
-            name?: string;
-            description?: string;
-            price?: number;
-        } = body.value;
-
-        // update the product
-        products = products.map((p) =>
-            p.id === params.id ? { ...p, ...updateData } : p
-        );
-
-        response.status = 200;
-        response.body = {
-            success: true,
-            data: products,
-        };
-    } else {
-        response.status = 404;
+    // first check if product exists in DB
+    await getProduct({ params: { id: params.id }, response });
+    if (response.status === 404) {
         response.body = {
             success: false,
-            message: "No Product Found.",
+            message: response.body.message,
         };
+        response.status = 404;
+        return;
+    } else {
+        const body = await request.body(); // request.body = {type: ____, value: product_data}
+        const product = body.value;
+
+        try {
+            await client.connect();
+
+            const result = await client.query(
+                "UPDATE products SET name=$1, description=$2, price=$3 WHERE id=$4",
+                product.name,
+                product.description,
+                product.price,
+                params.id
+            );
+            response.status = 200;
+            response.body = {
+                success: true,
+                data: product,
+            };
+        } catch (err) {
+            response.status = 500;
+            response.body = {
+                success: false,
+                message: err.toString(),
+            };
+        } finally {
+            await client.end();
+        }
     }
 };
 
