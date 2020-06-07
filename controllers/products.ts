@@ -29,11 +29,35 @@ let products: Product[] = [
 
 // @desc    Get all products
 // @route   GET /api/v0/products
-const getProducts = ({ response }: { response: any }) => {
-    response.body = {
-        success: true,
-        data: products,
-    };
+const getProducts = async ({ response }: { response: any }) => {
+    try {
+        await client.connect();
+        const result = await client.query("SELECT * FROM products");
+
+        const products = new Array();
+
+        result.rows.map((row) => {
+            let obj: any = new Object();
+            result.rowDescription.columns.map((col, i) => {
+                obj[col.name] = row[i];
+            });
+
+            products.push(obj);
+        });
+
+        response.body = {
+            success: true,
+            data: products,
+        };
+    } catch (err) {
+        response.status = 500;
+        response.body = {
+            success: false,
+            message: err.toString(),
+        };
+    } finally {
+        await client.end();
+    }
 };
 
 // @desc    Get single product
